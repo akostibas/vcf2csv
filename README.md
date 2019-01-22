@@ -3,7 +3,10 @@ VCF2CSV
 
 VCF2CSV is a simple Vcard to CSV converter.
 
-Presently, it only understands the Name, Full Name, and Email fields.
+Presently, it only understands the following fields:
+* Name (first and last)
+* Full Name
+* Email
 
 Usage:
 
