@@ -11,7 +11,7 @@ RE_VCF_NAME = r'^N:(.+);(.+);(.*);(.*);$'
 RE_VCF_FULL_NAME = r'^FN:(.*)$'
 RE_VCF_EMAIL= r'.*EMAIL.*type=INTERNET.*:(.*)$'
 
-FIELD_NAMES = ['name', 'full_name', 'email', 'email2']
+FIELD_NAMES = ['first_name', 'last_name', 'full_name', 'email', 'email2']
 
 def parse_vcf(vcf_file, ignore_no_email):
     data = []
@@ -37,7 +37,8 @@ def parse_vcf(vcf_file, ignore_no_email):
         email = re.match(RE_VCF_EMAIL, line)
 
         if name:
-            line_data['name'] = ("%s %s" % (name.group(2), name.group(1))).strip()
+            line_data['first_name'] = name.group(2).strip()
+            line_data['last_name'] = name.group(1).strip()
         if full_name:
             line_data['full_name'] = full_name.group(1).strip()
         if email:
