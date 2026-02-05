@@ -2,14 +2,13 @@ import argparse
 import csv
 import re
 import sys
-import time
 
-# VCF regex matches
-RE_VCF_BEGIN = r'^BEGIN:VCARD$'
-RE_VCF_END = r'^END:VCARD$'
-RE_VCF_NAME = r'^N:(.+);(.+);(.*);(.*);$'
-RE_VCF_FULL_NAME = r'^FN:(.*)$'
-RE_VCF_EMAIL= r'.*EMAIL.*type=INTERNET.*:(.*)$'
+# VCF regex matches - compiled with case-insensitive flag
+RE_VCF_BEGIN = re.compile(r'^BEGIN:VCARD$', re.IGNORECASE)
+RE_VCF_END = re.compile(r'^END:VCARD$', re.IGNORECASE)
+RE_VCF_NAME = re.compile(r'^N:([^;]*);([^;]*);?([^;]*);?([^;]*);?([^;]*)?$', re.IGNORECASE)
+RE_VCF_FULL_NAME = re.compile(r'^FN:(.*)$', re.IGNORECASE)
+RE_VCF_EMAIL = re.compile(r'^EMAIL[^:]*:(.+)$', re.IGNORECASE)
 
 FIELD_NAMES = ['first_name', 'last_name', 'full_name', 'email', 'email2']
 
@@ -19,9 +18,9 @@ def parse_vcf(vcf_file, ignore_no_email):
     for line in vcf_file:
         line = line.strip()
         # Handle lines that are beginnings and ends of cards
-        if re.match(RE_VCF_BEGIN, line):
+        if RE_VCF_BEGIN.match(line):
             line_data = {}
-        if re.match(RE_VCF_END, line):
+        if RE_VCF_END.match(line):
             if line_data != {}:
                 for field in FIELD_NAMES:
                     if field not in line_data:
@@ -32,9 +31,9 @@ def parse_vcf(vcf_file, ignore_no_email):
                 data = data + [line_data]
                 continue
 
-        name = re.match(RE_VCF_NAME, line)
-        full_name = re.match(RE_VCF_FULL_NAME, line)
-        email = re.match(RE_VCF_EMAIL, line)
+        name = RE_VCF_NAME.match(line)
+        full_name = RE_VCF_FULL_NAME.match(line)
+        email = RE_VCF_EMAIL.match(line)
 
         if name:
             line_data['first_name'] = name.group(2).strip()
@@ -57,11 +56,21 @@ def write_csv(data, csv_file):
         writer.writerow(line)
 
 def main(input_file, output_file, ignore_no_email):
-    with open(input_file, 'r') as vcf_file:
-        data = parse_vcf(vcf_file, ignore_no_email)
+    try:
+        with open(input_file, 'r', encoding='utf-8') as vcf_file:
+            data = parse_vcf(vcf_file, ignore_no_email)
 
-    with open(output_file, 'w') as csv_file:
-        write_csv(data, csv_file)
+        with open(output_file, 'w', encoding='utf-8', newline='') as csv_file:
+            write_csv(data, csv_file)
+    except FileNotFoundError as e:
+        print(f"Error: File not found - {e.filename}", file=sys.stderr)
+        return 1
+    except PermissionError as e:
+        print(f"Error: Permission denied - {e.filename}", file=sys.stderr)
+        return 1
+    except IOError as e:
+        print(f"Error: I/O error occurred - {e}", file=sys.stderr)
+        return 1
 
     return 0
 
