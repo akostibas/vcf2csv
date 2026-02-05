@@ -7,7 +7,7 @@ import sys
 RE_VCF_BEGIN = re.compile(r'^BEGIN:VCARD$', re.IGNORECASE)
 RE_VCF_END = re.compile(r'^END:VCARD$', re.IGNORECASE)
 RE_VCF_NAME = re.compile(r'^N:([^;]*);([^;]*);?([^;]*);?([^;]*);?([^;]*)?$', re.IGNORECASE)
-RE_VCF_FULL_NAME = re.compile(r'^FN:(.*)$', re.IGNORECASE)
+RE_VCF_FULL_NAME = re.compile(r'^FN[^:]*:(.*)$', re.IGNORECASE)
 RE_VCF_EMAIL = re.compile(r'^EMAIL[^:]*:(.+)$', re.IGNORECASE)
 
 FIELD_NAMES = ['first_name', 'last_name', 'full_name', 'email', 'email2']

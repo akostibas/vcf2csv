@@ -1,0 +1,16 @@
+BEGIN:VCARD
+VERSION:4.0
+KIND:individual
+FN:Jane Doe
+N:Doe;Jane;;;
+ORG:ABC\, Inc.;North American Division;Marketing
+EMAIL:jane.doe@abc.com
+END:VCARD
+
+BEGIN:VCARD
+VERSION:4.0
+FN:Bob Smith
+N:Smith;Bob;;;
+EMAIL;TYPE=work:bob.smith@company.com
+EMAIL;TYPE=home:bob@personal.com
+END:VCARD

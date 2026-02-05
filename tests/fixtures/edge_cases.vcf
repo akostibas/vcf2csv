@@ -1,0 +1,34 @@
+BEGIN:VCARD
+N:Doe;John
+FN:John Doe
+EMAIL;TYPE=work:john@example.com
+END:VCARD
+
+begin:vcard
+n:Smith;Jane;;
+fn:Jane Smith
+email:jane@example.com
+END:VCARD
+
+BEGIN:VCARD
+N:García;José
+FN:José García
+EMAIL;TYPE=INTERNET:jose@example.com
+END:VCARD
+
+BEGIN:VCARD
+N:李;明
+FN:李明
+EMAIL:ming@example.cn
+END:VCARD
+
+BEGIN:VCARD
+N:NoEmail;Person
+FN:Person NoEmail
+END:VCARD
+
+BEGIN:VCARD
+N:;OnlyFirstName
+FN:OnlyFirstName
+EMAIL:firstname@example.com
+END:VCARD

@@ -23,3 +23,11 @@ optional arguments:
   -h, --help         show this help message and exit
   --ignore_no_email  ignore entries with no email
 ```
+
+## Testing
+
+Run the test suite:
+
+```bash
+python tests/test_vcf2csv.py
+```
