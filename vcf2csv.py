@@ -9,8 +9,9 @@ RE_VCF_END = re.compile(r'^END:VCARD$', re.IGNORECASE)
 RE_VCF_NAME = re.compile(r'^N:([^;]*);([^;]*);?([^;]*);?([^;]*);?([^;]*)?$', re.IGNORECASE)
 RE_VCF_FULL_NAME = re.compile(r'^FN[^:]*:(.*)$', re.IGNORECASE)
 RE_VCF_EMAIL = re.compile(r'^EMAIL[^:]*:(.+)$', re.IGNORECASE)
+RE_VCF_PHONE = re.compile(r'^TEL[^:]*:(.+)$', re.IGNORECASE)
 
-FIELD_NAMES = ['first_name', 'last_name', 'full_name', 'email', 'email2']
+FIELD_NAMES = ['first_name', 'last_name', 'full_name', 'email', 'email2', 'phone', 'phone2']
 
 def parse_vcf(vcf_file, ignore_no_email):
     data = []
@@ -34,6 +35,7 @@ def parse_vcf(vcf_file, ignore_no_email):
         name = RE_VCF_NAME.match(line)
         full_name = RE_VCF_FULL_NAME.match(line)
         email = RE_VCF_EMAIL.match(line)
+        phone = RE_VCF_PHONE.match(line)
 
         if name:
             line_data['first_name'] = name.group(2).strip()
@@ -45,6 +47,11 @@ def parse_vcf(vcf_file, ignore_no_email):
                 line_data['email'] = email.group(1).strip()
             else:
                 line_data['email2'] = email.group(1).strip()
+        if phone:
+            if "phone" not in line_data:
+                line_data['phone'] = phone.group(1).strip()
+            else:
+                line_data['phone2'] = phone.group(1).strip()
 
     return data
 

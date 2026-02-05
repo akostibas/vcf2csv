@@ -56,6 +56,8 @@ class TestVCF2CSV(unittest.TestCase):
         self.assertEqual(contact['full_name'], 'John Doe')
         self.assertEqual(contact['email'], 'forrestgump@example.com')
         self.assertEqual(contact['email2'], 'example@example.com')
+        self.assertEqual(contact['phone'], '(111) 555-1212')
+        self.assertEqual(contact['phone2'], '(404) 555-1212')
 
     def test_example2_multiple_contacts(self):
         """Test parsing example2.vcf - multiple contacts from RFC 6350"""
@@ -174,6 +176,29 @@ class TestVCF2CSV(unittest.TestCase):
 
         ming = next(c for c in data if c['last_name'] == '李')
         self.assertEqual(ming['first_name'], '明')
+
+    def test_phone_extraction(self):
+        """Test phone number extraction with various formats"""
+        input_file = self.get_fixture_path('phone_test.vcf')
+        output_file = self.get_temp_output_path()
+
+        result = vcf2csv.main(input_file, output_file, ignore_no_email=False)
+        self.assertEqual(result, 0, "Conversion should succeed")
+
+        data = self.read_csv_output(output_file)
+        self.assertEqual(len(data), 3, "Should have 3 contacts")
+
+        # Test single phone number
+        self.assertEqual(data[0]['phone'], '+1-234-567-8900')
+        self.assertEqual(data[0]['phone2'], '')
+
+        # Test multiple phone numbers
+        self.assertEqual(data[1]['phone'], '555-1234')
+        self.assertEqual(data[1]['phone2'], '(555) 555-5678')
+
+        # Test no phone number
+        self.assertEqual(data[2]['phone'], '')
+        self.assertEqual(data[2]['phone2'], '')
 
 
 class TestVCFParser(unittest.TestCase):

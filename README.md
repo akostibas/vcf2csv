@@ -7,6 +7,7 @@ Presently, it only understands the following fields:
 * Name (first and last)
 * Full Name
 * Email
+* Phone
 
 Usage:
 
